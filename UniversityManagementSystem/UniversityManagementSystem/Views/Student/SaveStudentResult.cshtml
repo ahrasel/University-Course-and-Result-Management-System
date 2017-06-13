@@ -1,0 +1,202 @@
+﻿@using UniversityManagementSystem.Models.EntityModel
+
+@{
+    Layout = null;
+    var Grade = new[]
+              {
+                 new {Letter="A+" },
+                 new {Letter="A" },
+                 new {Letter="A-" },
+                 new {Letter="B+" },
+                 new {Letter="B" },
+                 new {Letter="B-" },
+                 new {Letter="C+" },
+                 new {Letter="C" },
+                 new {Letter="C-" },
+                 new {Letter="D+" },
+                 new {Letter="D" },
+                 new {Letter="D-" },
+                 new {Letter="F" },
+                };
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SaveStudentResult</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <div class="container">
+            <div class="row">
+                <form class="form-horizontal" id="save-student-result" method="post">
+                    <h3 class="text-center">Save Students Results</h3>
+                    <hr />
+                    <h4 class="text-center">@ViewBag.msg</h4>
+                    <hr />
+
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1">Student Reg. no.</label>
+                        <div class="col-sm-5">
+
+                            <select class="form-control" id="studentId" name="studentId">
+                                <option value="">Select Reg. No.</option>
+
+                                @foreach (Student student in ViewBag.Students)
+                                {
+                                    <option value="@student.StudentId">@student.StudentRegNo</option>
+                                }
+
+                            </select>
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1">Name</label>
+                        <div class="col-sm-5">
+                            <input class="form-control text-center text-danger" type="text" readonly="readonly" id="student-name" />
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1">Email</label>
+                        <div class="col-sm-5">
+                            <input class="form-control text-center text-danger" type="text" readonly="readonly" id="student-email" />
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1">Department</label>
+                        <div class="col-sm-5">
+                            <input class="form-control text-center text-danger" type="text" readonly="readonly" id="student-department" />
+                        </div>
+                    </div>
+
+
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1">Select Course</label>
+                        <div class="col-sm-5">
+                            <select class="form-control" id="courseId" name="courseId"></select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1">Select grade Letter</label>
+                        <div class="col-sm-5">
+
+                            <select class="form-control" name="gradeLetter">
+                                <option value="">Select Reg. No.</option>
+
+                                @foreach (var grade in @Grade)
+                                {
+                                    <option value="@grade.Letter">@grade.Letter</option>
+                                }
+
+                            </select>
+
+                        </div>
+                    </div>
+
+
+                    <div class="form-group ">
+
+                        <div class="col-sm-5 col-sm-offset-4">
+                            <input class="btn btn-success form-control" type="submit" value="Save" />
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+
+    <script>
+
+        //----------------------Validation-------------------------
+        $("#save-student-result").validate({
+            rules: {
+                studentId: "required",
+                courseId: "required",
+                gradeLetter: "required"
+
+            },
+            messages: {
+
+            }
+        });
+
+        //----------------------Show Course list List-------------------------
+        $(document).ready(function () {
+            $("#studentId").change(function () {
+                var selectStudentId = parseInt($("#studentId").val());
+                $("#courseId").empty();
+                $("#courseId").append('<option value=0> ' + "Select..." + '</option>');
+
+                var json = { studentId: selectStudentId };
+
+                //var json = { studentId: selectedStudentID };
+                if (selectStudentId > 0) {
+                    $.ajax({
+                        url: '@Url.Action("StudentDetails", "Student")',
+                        data: { studentId: selectStudentId },
+                        async: false,
+                        success: function (result) {
+
+                            $("#student-name").val(result.Name);
+                            $("#student-email").val(result.Email);
+                            $("#student-department").val(result.Department);
+                        }
+                    });
+                }
+
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetAllCourseForSaveGrade", "Student")',
+                    contentType: "application/json; charset=utf-8",
+                    async: false,
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        $.each(data, function (key, value) {
+                            //alert(key);
+                            $("#courseId").append('<option value=' + value.Id + '>' + value.CourseName + '</option>');
+
+                        });
+
+                    }
+                });
+
+            });
+
+
+
+
+
+            $(function () {
+                $("#datepicker").datepicker();
+            });
+            $('#submit')[0].reset();
+
+        });
+
+    </script>
+
+
+</body>
+</html>

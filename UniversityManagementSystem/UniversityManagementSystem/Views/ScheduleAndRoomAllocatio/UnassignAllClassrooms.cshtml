@@ -1,0 +1,88 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UnassignAllClassrooms</title>
+
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+    <link href="~/Content/jquery-confirm.css" rel="stylesheet" />
+</head>
+<body>
+    <div style="position: relative;height: 500px" class="container">
+
+        <div class="col-sm-6 text-center" style="position: absolute; top: 50%; left: 25%;">
+            <hr />
+            <h3 id="confirm-msg"></h3>
+            <hr/>
+            <button id="confirmmsg" style="width: 250px; height: 100px;" class="btn btn-danger btn-lg">Unallocate Rooms</button>
+            <hr/>
+        </div>
+
+    </div>
+
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/jquery-confirm.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+
+            $("#confirmmsg").click(function () {
+
+                // alert("You cliked Me");
+
+                $.confirm({
+                    title: 'Unallocate All Classrooms!',
+                    content: 'Are You Sure To Unallocate All Classrooms?',
+                    type: 'red',
+                    typeAnimated: true,
+                    boxWidth: '500px',
+                    useBootstrap: false,
+
+                    buttons: {
+                        confirm: function () {
+                            $.ajax({
+                                type: "POST",
+                                url: '@Url.Action("UnalloceteAllClassroom", "ScheduleAndRoomAllocatio")',
+                                contentType: "application/json; charset=utf-8",
+
+                                success: function (data) {
+
+                                    if (data > 0) {
+                                        $("#confirm-msg").text("Unallocate All Classrooms");
+                                    }
+                                    else {
+                                        $("#confirm-msg").text("Unallocate All Classrooms Failed");
+                                    }
+
+                                    //alert(data);
+
+                                }
+                            });
+
+                        },
+                        cancel: function () {
+                            // $.alert('Canceled!');
+                        }
+
+                    }
+                });
+
+            }
+
+            );
+
+        });
+
+    </script>
+
+</body>
+</html>

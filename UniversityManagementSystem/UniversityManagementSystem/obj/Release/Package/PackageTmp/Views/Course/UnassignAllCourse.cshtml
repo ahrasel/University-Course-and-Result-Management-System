@@ -1,0 +1,90 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UnassignAllCourse</title>
+    
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+    <link href="~/Content/jquery-confirm.css" rel="stylesheet" />
+
+
+</head>
+<body>
+<div style="position: relative;height: 500px" class="container">
+    
+    <div class="col-sm-6 text-center" style="position: absolute; top: 50%; left: 25%;">
+        <hr/>
+            <h3 id="confirm-msg"></h3>
+        <hr/>
+        <button  id="confirmmsg" type="button"  style="width: 250px;height: 100px;" class="btn btn-danger btn-lg">Unassign Courses</button>
+        <hr />
+    </div>
+
+</div>
+    
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/jquery-confirm.js"></script>
+    
+
+<script>
+    $(document).ready(function() {
+
+        $("#confirmmsg").click(function() {
+
+            // alert("You cliked Me");
+
+            $.confirm({
+                title: 'Unassign All Courses!',
+                content: 'Are You Sure To Unassign All Courses?',
+                type: 'red',
+                typeAnimated: true,
+                boxWidth: '500px',
+                useBootstrap: false,
+
+                buttons: {
+                    confirm: function () {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("UnassignAllCourses", "Course")',
+                            contentType: "application/json; charset=utf-8",
+                            
+                            success: function (data) {
+
+                                if (data > 0) {
+                                    $("#confirm-msg").text("Unassigned All Courses");
+                                }
+                                else {
+                                    $("#confirm-msg").text("Unassigned All Courses Failed");
+                                }
+
+                                //alert(data);
+                               
+                            }
+                        });
+
+                    },
+                    cancel: function () {
+                       // $.alert('Canceled!');
+                    }
+                 
+                }
+            });
+
+            }
+            
+        );
+
+    });
+
+</script>
+
+</body>
+</html>

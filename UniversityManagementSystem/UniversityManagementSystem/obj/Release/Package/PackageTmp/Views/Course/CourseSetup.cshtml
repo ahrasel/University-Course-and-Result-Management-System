@@ -1,0 +1,131 @@
+﻿@using UniversityManagementSystem.Models.EntityModel
+@model Course
+@{
+    Layout = null;
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>title</title>
+
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+
+
+        <div class="container">
+            <div class="row">
+                <form method="post" class="form-horizontal" id="courese-form">
+                    <h4 class="text-center">Save Course</h4>
+                    <hr/>
+                    <h4 class="text-center" id="unique-name">@ViewBag.a</h4>
+                    <hr/>
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1">Code</label>
+                        <div class="col-sm-5">
+                            <input class="form-control" type="text" name="CourseCode" placeholder="Course Code Must Be 5 Characters"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1">Name</label>
+                        <div class="col-sm-5">
+                            <input class="form-control" type="text" name="CourseName" placeholder="Course Name"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1">Credit</label>
+                        <div class="col-sm-5">
+                            <input class="form-control" type="text" name="CourseCredit" placeholder="Course Credit [0.5 to 5.0]"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1">Description</label>
+                        <div class="col-sm-5">
+                            <textarea rows="5" cols="15" class="form-control" type="text" name="CourseDescription" placeholder="Course Description"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1">Department</label>
+                        <div class="col-sm-5">
+                            <select class="form-control" name="CourseDepartmentId">
+                                <option value="">Select..</option>
+                                @foreach (Department d in ViewBag.Departments)
+                                {
+                                    <option value="@d.Id">@d.DepartmentCode</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1">Semester</label>
+                        <div class="col-sm-5">
+                            <select class="form-control" name="CourseSemesterId">
+                                <option value="">Select..</option>
+
+                                @foreach (Semester s in ViewBag.Semesetrs)
+                                {
+                                    <option value="@s.Id">@s.Semesters</option>
+                                }
+
+
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+
+                        <div class="col-sm-5 col-sm-offset-4">
+                            <input class="btn btn-success form-control" type="submit" name="submit" value="Save" placeholder="Code"/>
+                        </div>
+                    </div>
+                    <hr/>
+                </form>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    
+    <script>
+        $("#courese-form").validate({
+            rules: {
+                CourseCode: {
+                    required: true,
+                    minlength: 5,
+                    maxlength:5
+                },
+                CourseName: "required",
+                CourseDescription: "required",
+                CourseDepartmentId: "required",
+                CourseSemesterId: "required",
+                CourseCredit: {
+                    required: true,
+                    range: [0.5, 5.0]
+                }
+            },
+            messages: {
+                CourseCode: "Course Code Must 5 Charecter",
+                CourseCredit:"Credit Must Be 0.5 to 5.0"
+            }
+        });
+    </script>
+
+
+</body>
+</html>

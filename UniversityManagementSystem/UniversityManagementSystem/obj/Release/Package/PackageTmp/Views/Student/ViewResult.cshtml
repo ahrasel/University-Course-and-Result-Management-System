@@ -1,0 +1,225 @@
+﻿@using UniversityManagementSystem.Models.EntityModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ViewResult</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <div class="container">
+            <div class="row">
+                <form class="form-horizontal" id="course-assign">
+                    <h3 class="text-center">View Students Result</h3>
+                    <hr />
+                    @*<h4 class="text-center">@ViewBag.msg</h4>*@
+                    <hr />
+
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1">Student Reg. no.</label>
+                        <div class="col-sm-5">
+
+                            <select class="form-control" id="studentId" name="studentId">
+                                <option value="">Select Reg. No.</option>
+
+                                @foreach (Student student in ViewBag.Students)
+                                {
+                                    <option value="@student.StudentId">@student.StudentRegNo</option>
+                                }
+
+                            </select>
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1">Name</label>
+                        <div class="col-sm-5">
+                            <input class="form-control text-center text-danger" type="text" readonly="readonly" id="student-name" />
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1">Email</label>
+                        <div class="col-sm-5">
+                            <input class="form-control text-center text-danger" type="text" readonly="readonly" id="student-email" />
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1">Department</label>
+                        <div class="col-sm-5">
+                            <input class="form-control text-center text-danger" type="text" readonly="readonly" id="student-department" />
+                        </div>
+                    </div>
+                    
+                    
+
+
+                    <div class="form-group ">
+
+                        <div class="col-sm-5 col-sm-offset-4">
+                            <a id="make-pdf" class="btn btn-success">Make PDF</a>
+                        </div>
+                    </div>
+
+                </form>
+                <hr />
+                <hr />
+                
+                <div class="col-sm-offset-3 text-center">
+                    
+                    <div id="show-result">
+                        <table class="col-sm-8 text-center text-primary" style="font-size: 16px" id="show-course"></table>
+
+                    </div>
+
+                   
+                    @*<table id="tbr"></table>
+                    
+                    <table id="show-result">
+                        <tr>
+                            <td style="width: 500px">
+                                <table id="tbr"></table>
+                            </td>
+
+                        </tr>
+                    </table>*@
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+    <script src="~/Scripts/jspdf.min.js"></script>
+
+    <script>
+
+
+        //----------------------Show Student Ino-------------------------//
+        $(document).ready(function () {
+
+
+            //----------------------Validation-------------------------
+            $("#course-assign").validate({
+                rules: {
+                    studentId: "required",
+                },
+                messages: {
+
+                }
+            });
+
+
+            $("#studentId").change(function () {
+                var selectStudentId = parseInt($("#studentId").val());
+                $("#courseId").empty();
+                // $("#courseId").append('<option value=0> ' + "Select..." + '</option>');
+                $("#show-course").empty();
+                $("#show-course").addClass("table-bordered");
+                $("#show-course").append('<tr><th class="table-bordered text-center">Code</th><th class="table-bordered text-center">Name</th><th class="table-bordered text-center">Grade</th></tr>');
+                
+
+
+                var json = { studentId: selectStudentId };
+
+                //var json = { studentId: selectedStudentID };
+                if (selectStudentId > 0) {
+                    $.ajax({
+                        url: '@Url.Action("StudentDetails", "Student")',
+                        data: { studentId: selectStudentId },
+                        async: false,
+                        success: function (result) {
+
+                            $("#student-name").val(result.Name);
+                            $("#student-email").val(result.Email);
+                            $("#student-department").val(result.Department);
+                        }
+                    });
+                }
+
+                //---------------------Show Course table--------------------------//
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ShowStudentResultByStudentId", "Student")',
+                    contentType: "application/json; charset=utf-8",
+                    async: false,
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        $.each(data, function (key, value) {
+                            //alert(key);
+                           // $("#courseId").append('<option value=' + value.Id + '>' + value.CourseName + '</option>');
+
+                            $("#show-course").append('<tr class="table-bordered"><td class="table-bordered">' + value.Code + '</td><td class="table-bordered">' + value.Name + '</td><td class="table-bordered">' + value.Grade + '</td></tr>');
+                          //  $("#show-result").append('<tr ><td>' + value.Code + '</td><td>' + value.Name + '</td><td>' + value.Grade + '</td></tr>');
+
+                        });
+
+                    }
+                });
+
+            });
+
+
+
+            //$(function () {
+            //    $("#datepicker").datepicker();
+            //});
+            //$('#submit')[0].reset();
+
+           // $("#show-result").hide();
+
+            //--------------------------
+            $("#make-pdf").click(function() {
+               // alert("Rasel");
+                var regNo = $('#studentId option:selected').text();
+                var nam = $('#student-name').val();
+                var email = $('#student-email').val();
+                var dept = $('#student-department').val();
+                var doc = new jsPDF();
+                doc.text(80, 20, 'Student Result Sheet');
+                doc.text(20, 40, 'Registration No: ' + regNo);
+                doc.text(20, 50, 'Student Name : ' + nam);
+                doc.text(20, 60, 'Student Email : ' + email);
+                doc.text(20, 70, 'Department : ' + dept);
+
+                doc.fromHTML($('#show-result').get(0), 20, 70);
+                
+
+                doc.save('Result.pdf');
+            });
+
+            function resultPdf() {
+               
+                
+            }
+
+
+
+
+        });
+
+    </script>
+
+
+</body>
+</html>

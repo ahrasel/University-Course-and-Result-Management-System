@@ -1,0 +1,127 @@
+﻿@using System.Collections
+@using System.Web.UI.WebControls
+@using UniversityManagementSystem.Models.EntityModel
+@model UniversityManagementSystem.Models.EntityModel.Student
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Register</title>
+
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+
+
+</head>
+<body>
+    <div>
+
+        <div class="container">
+            <div class="row">
+                <form class="form-horizontal" id="student-register-form" method="post">
+                    <h5 class="text-center">Ragister Student</h5>
+                    <hr />
+                    <h3 class="text-center">@ViewBag.msg</h3>
+                    <hr />
+
+                    <div class="form-group ">
+                        <div class="control-label col-sm-3 col-sm-offset-1">
+                            @Html.LabelFor(s => s.StudentName)
+                        </div>
+                        <div class="col-sm-5">
+                            @Html.TextBoxFor(s => s.StudentName, new { @class = "form-control", placeholder = "Student Name" })
+                            @Html.ValidationMessageFor(s => s.StudentName, "", new { @class = "text-danger" })
+                        </div>
+                       
+                    </div>
+
+                    <div class="form-group ">
+                        <div class="control-label col-sm-3 col-sm-offset-1">
+                            @Html.LabelFor(s => s.StudentEmail)
+                        </div>
+                        <div class="col-sm-5">
+                            @Html.TextBoxFor(s => s.StudentEmail, new { @class = "form-control", placeholder = "abc@email.com" })
+                            @Html.ValidationMessageFor(s => s.StudentEmail, "", new { @class = "text-danger" })
+                        </div>
+                     
+                    </div>
+
+                    <div class="form-group ">
+                        <div class="control-label col-sm-3 col-sm-offset-1">
+                            @Html.LabelFor(s => s.StudentContactNo)
+                        </div>
+                        <div class="col-sm-5">
+                            @Html.TextBoxFor(s => s.StudentContactNo, new { @class = "form-control", placeholder = "019XXXXXXXX" })
+                        @Html.ValidationMessageFor(s => s.StudentContactNo, "", new { @class = "text-danger" })
+                        </div>
+                        
+                    </div>
+
+
+                    <div class="form-group ">
+                        <div class="control-label col-sm-3 col-sm-offset-1">
+                            @Html.LabelFor(s => s.StudentRegistrationDate)
+                        </div>
+                        <div class="col-sm-5">
+                            @Html.TextBoxFor(s => s.StudentRegistrationDate, new { @class = "form-control", placeHolder="MM/DD/YYYY",  id = "datepicker", type = "text" })
+                            @Html.ValidationMessageFor(s => s.StudentRegistrationDate, "", new { @class = "text-danger" })
+                        </div>
+                       
+                    </div>
+
+                    <div class="form-group ">
+                        <div class="control-label col-sm-3 col-sm-offset-1">
+                            @Html.LabelFor(s => s.StudentAddress)
+                        </div>
+                        <div class="col-sm-5">
+                            @Html.TextAreaFor(s => s.StudentAddress, new { @class = "form-control", @rows = "4", @cols = "15", placeholder = "Student Address" })
+                            @Html.ValidationMessageFor(s => s.StudentAddress, "", new { @class = "text-danger" })
+                        </div>
+                     
+                    </div>
+                    
+                    <div class="form-group ">
+                        <div class="control-label col-sm-3 col-sm-offset-1">
+                            @Html.LabelFor(s => s.StudentDepartmnetId)
+                        </div>
+                        <div class="col-sm-5">
+                            @Html.DropDownListFor(s => s.StudentDepartmnetId,ViewBag.Departments as IEnumerable<SelectListItem>,"Select Department",new { @class = "form-control"})
+                            @Html.ValidationMessageFor(s => s.StudentDepartmnetId, "", new { @class = "text-danger" })
+                        </div>
+                       
+                    </div>
+
+                    <div class="form-group ">
+                        <div class="col-sm-5 col-sm-offset-4">
+                            <input class="btn btn-success form-control" type="submit" value="Register" placeholder="Code" />
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+
+    <script>
+        $(function () {
+            $("#datepicker").datepicker();
+        });
+        $('#submit')[0].reset();
+    </script>
+
+</body>
+</html>

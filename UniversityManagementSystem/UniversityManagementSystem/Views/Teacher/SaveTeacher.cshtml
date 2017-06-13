@@ -1,0 +1,153 @@
+﻿@using UniversityManagementSystem.Models.EntityModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SaveTeacher</title>
+    
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+</head>
+<body>
+<div>
+
+    <div class="container">
+        <div class="row">
+            <form id="teacher-form" method="post" class="form-horizontal">
+                <h4 class="text-center">Save Teacher Information</h4>
+                <hr/>
+                <h4 class="text-center" id="unique-name">@ViewBag.a</h4>
+                <hr/>
+                <div class="form-group ">
+                    <label class="control-label col-sm-3 col-sm-offset-1">Name</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" type="text" name="TeacherName" placeholder="Teacher Name"/>
+                    </div>
+                </div>
+
+
+                <div class="form-group ">
+                    <label class="control-label col-sm-3 col-sm-offset-1">Address</label>
+                    <div class="col-sm-5">
+                        <textarea rows="5" cols="15" class="form-control" type="text" name="TeacherAddress" placeholder="Teacher Address"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group ">
+                    <label class="control-label col-sm-3 col-sm-offset-1">Email</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" type="email" name="TeacherEmail" placeholder="abcd@email.com"/>
+                    </div>
+                </div>
+
+                <div class="form-group ">
+                    <label class="control-label col-sm-3 col-sm-offset-1">Contact No.</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" type="number" name="TeacherContactNo" placeholder="019XXXXXXXX"/>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group ">
+                    <label class="control-label col-sm-3 col-sm-offset-1">Designation</label>
+                    <div class="col-sm-5">
+
+                        <select class="form-control" name="DesignationId">
+                            <option value="">Select..</option>
+
+                            @foreach (Designation designation in ViewBag.Designations)
+                            {
+                                <option value="@designation.Id">@designation.DesignationName</option>
+                            }
+
+                        </select>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group ">
+                    <label class="control-label col-sm-3 col-sm-offset-1">Department</label>
+                    <div class="col-sm-5">
+
+                        <select class="form-control" name="DepartmentId">
+                            <option value="">Select..</option>
+
+                            @foreach (Department department in ViewBag.Departments)
+                            {
+                                <option value="@department.Id">@department.DepartmentName</option>
+                            }
+                        </select>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group ">
+                    <label class="control-label col-sm-3 col-sm-offset-1">Credit To Be Taken</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" type="number" name="TakenCredit" placeholder="Ex: 18"/>
+                    </div>
+                </div>
+
+
+                <div class="form-group ">
+
+                    <div class="col-sm-5 col-sm-offset-4">
+                        <input class="btn btn-success form-control" type="submit" name="submit" value="Save" placeholder="Code"/>
+                    </div>
+                </div>
+                <hr/>
+                <hr/>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+    
+    
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+    
+    
+    <script>
+        $("#teacher-form").validate({
+            rules: {
+                TeacherName: "required",
+                TeacherAddress: "required",
+                TeacherEmail: {
+                    required: true,
+                    email: true
+                },
+                TeacherContactNo: {
+                    required: true,
+                    digits: true,
+                    minlength: 11,
+                    maxlength:11
+                },
+                DesignationId: "required",
+                DepartmentId: "required",
+                TakenCredit: {
+                    required: true,
+                    number: true,
+                    min:0
+                }
+            },
+            messages: {
+                TeacherEmail: " Required Valid Email Address And Unique",
+                TakenCredit: "Credit Is No Neg. Number",
+                TeacherContactNo: "Contact No. Must Be 11 Digits"
+            }
+        });
+    </script>
+</body>
+</html>

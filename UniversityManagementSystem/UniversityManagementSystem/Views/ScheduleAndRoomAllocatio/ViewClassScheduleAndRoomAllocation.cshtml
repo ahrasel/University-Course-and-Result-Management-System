@@ -1,0 +1,83 @@
+﻿@using UniversityManagementSystem.Models.EntityModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ViewClassScheduleAndRoomAllocation</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+</head>
+<body>
+<div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-offset-1 text-center">
+                <hr />
+                <h4 class="text-center">View All Allocated Class Room</h4>
+                <hr />
+
+                <form method="post">
+                    <div class="form-group ">
+                        <label class="control-label col-sm-3 col-sm-offset-1 text-right">Department</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="DepartmentId">
+                                <option value="">Select Dept.</option>
+                                @foreach (Department d in ViewBag.Departments)
+                                {
+                                    <option value="@d.Id">@d.DepartmentCode</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </form>
+                <br />
+                <hr />
+                <hr />
+                <table class="col-sm-11 text-center text-primary" style="font-size: 18px" id="show-course"></table>
+            </div>
+
+        </div>
+    </div>
+</div>
+    
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+
+
+    <script>
+    //----------------------Show Course Statics-------------------------
+    $(document).ready(function () {
+        $("#DepartmentId").change(function () {
+            var selectdepartmentId = $("#DepartmentId").val();
+            $("#show-course").empty();
+            $("#show-course").addClass("table-bordered");
+            $("#show-course").append('<tr><th class="table-bordered text-center">Course Code</th><th class="table-bordered text-center">Name</th><th class="table-bordered text-center">Schedule Info</th></tr>');
+
+            var json = { departmentId: selectdepartmentId };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AllAllocatedClassroomByDeptId", "ScheduleAndRoomAllocatio")',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(json),
+                success: function (data) {
+                    $.each(data, function (key, value) {
+                        //alert(key);
+                        $("#show-course").append('<tr class="table-bordered"><td class="table-bordered">' + value.CourseCode + '</td><td class="table-bordered">' + value.CourseName + '</td><td class="table-bordered">' + value.ScheduleInfo + '</td></tr>');
+                    });
+                }
+            });
+        });
+    });
+    </script>
+
+
+
+</body>
+</html>

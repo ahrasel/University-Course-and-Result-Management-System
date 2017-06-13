@@ -1,0 +1,69 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>University Management &brvbar; By Decoder</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
+</head>
+<body>
+<div class="container-fluid">
+
+    <div style="padding-top:10px " class="jumbotron marzin-zero">
+        <div class="row marzin-zero">
+            <div class="row marzin-zero">
+                <div class="col-sm-2">
+                    <div class="list-group text-center">
+                        <h5 class="list-group-item list-group-item-danger active padding-bottom">Department</h5>
+                        <a class="btn btn-block btn-sm btn-default" href="~/Department/SaveDepartment" target="mycb">Save Deparment</a>
+                        <a class="btn btn-block btn-sm  btn-default" href="~/Department/ShowAlldepartment" target="mycb">View All Deparment</a>
+
+                        <h5 class="list-group-item list-group-item-danger active padding-bottom">Course</h5>
+                        <a class="btn btn-block btn-sm btn-default" href="~/Course/CourseSetup" target="mycb">Save Course</a>
+                        <a class="btn btn-block btn-sm btn-default" href="~/Course/ShowAllCourse" target="mycb">View Course Statics</a>
+
+
+                        <h5 class="list-group-item list-group-item-danger active padding-bottom">Teacher</h5>
+                        <a class="btn btn-block btn-sm btn-default" href="~/Teacher/SaveTeacher" target="mycb">Save Teacher</a>
+                        <a class="btn btn-block btn-sm btn-default" href="~/Course/Courseassigntoteacher" target="mycb">Course Assign To Teacher</a>
+                        
+
+                        <h5 class="list-group-item list-group-item-danger active padding-bottom">Classroom And Schedule</h5>
+                        <a class="btn btn-block btn-sm btn-default" href="~/ScheduleAndRoomAllocatio/AllocateClassroom" target="mycb">Allocate Classroom</a>
+                        <a class="btn btn-block btn-sm btn-default" href="~/ScheduleAndRoomAllocatio/ViewClassScheduleAndRoomAllocation" target="mycb">View Allocated Class Room</a>
+
+
+                        <h5 class="list-group-item list-group-item-danger active padding-bottom">Student</h5>
+                        <a class="btn btn-block btn-sm btn-default" href="~/Student/Register" target="mycb">Register Student</a>
+                        <a class="btn btn-block btn-sm btn-default" href="~/Student/Enrollcourse" target="mycb">Enroll In A Course</a>
+                        <a class="btn btn-block btn-sm btn-default" href="~/Student/SaveStudentResult" target="mycb">Save Result</a>
+                        <a class="btn btn-block btn-sm btn-default" href="~/Student/ViewResult" target="mycb">View Result</a>
+                        
+
+                        <h6  class="list-group-item list-group-item-danger active padding-bottom">Reset Course And Room</h6>
+                        <div>
+                            <a class="btn btn-xs btn-danger" href="~/Course/UnassignAllCourse" target="mycb">unassign course</a>
+                            <a class="btn btn-xs btn-danger" href="~/ScheduleAndRoomAllocatio/UnassignAllClassrooms" target="mycb">unallocate room</a>
+                        </div>
+                        
+
+                    </div>
+                </div>
+                <div style="margin-top: 20px;" class="col-sm-offset-1 col-sm-8">
+                    <iframe class="table-bordered"  width="100%" height="620px" name="mycb"></iframe>
+
+                </div>
+                </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,247 @@
+﻿@using UniversityManagementSystem.Models.EntityModel
+@model AllocateClassroom
+@{
+    Layout = null;
+
+
+    var Days = new[]
+    {
+                new {Code="Sun",Name="Sunday"},
+                new {Code="Mon",Name="Monday"},
+                new {Code="Tue",Name="Tuesday"},
+                new {Code="Wed",Name="Wednesday"},
+                new {Code="Thu",Name="Thursday"},
+                new {Code="Fri",Name="Friday"},
+                new {Code="Sat",Name="Saturday"}
+            };
+
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AllocateClassroom</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+    <link href="~/Content/jquery.timepicker.css" rel="stylesheet" />
+</head>
+<body>
+<div>
+
+    <div class="container">
+        <div class="row">
+            <form class="form-horizontal" id="room-allocation" name="room-allocation" method="post">
+                <h4 class="text-center">Allocate Class Room</h4>
+                <hr />
+                 <h4 class="text-center">@ViewBag.msg</h4>
+                <hr />
+
+                <div class="form-group ">
+                    <label class="control-label col-sm-3 col-sm-offset-1">Department</label>
+                    <div class="col-sm-5">
+
+                        <select class="form-control" id="departmentId" name="departmentId">
+                            <option value="">Select department</option>
+                            @foreach (Department department in ViewBag.Departments)
+                            {
+                                <option value=@department.Id>@department.DepartmentCode</option>
+                            }
+                        </select>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group ">
+                    <label class="control-label col-sm-3 col-sm-offset-1">Course</label>
+                    <div class="col-sm-5">
+                        <select class="form-control" id="CourseId" name="CourseId"></select>
+                    </div>
+                   
+                </div>
+                    
+                    
+                <div class="form-group ">
+                    <label class="control-label col-sm-3 col-sm-offset-1">Room No.</label>
+                    <div class="col-sm-5">
+                        <select class="form-control" id="selected-room" name="RoomNo">
+                            <option value="">Select Room</option>
+                            @foreach (ClassRoom r in ViewBag.Rooms)
+                            {
+                                <option value="@r.Id">@r.RoomNo</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group ">
+                    <label class="control-label col-sm-3 col-sm-offset-1">Day</label>
+                    <div class="col-sm-5">
+                        <select class="form-control" id="selected-day" name="Day">
+                            <option value="">Select Day</option>
+                            @foreach (var d in Days)
+                            {
+                                <option value="@d.Code">@d.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group ">
+                    <label class="control-label col-sm-3 col-sm-offset-1">From</label>
+                    <div class="col-sm-5">
+                        <input class="form-control text-center" type="text" name="FromTime" id="fromTimePciker" placeholder="HH:MM AM" />
+                    </div>
+                </div>
+                    
+                    
+                    
+                <div class="form-group ">
+                    <label class="control-label col-sm-3 col-sm-offset-1">To</label>
+                    <div class="col-sm-5">
+                        <input class="form-control text-center" type="text" name="ToTime" id="toTimePciker" placeholder="HH:MM AM" />
+                    </div>
+                </div>
+
+               
+
+                <div class="form-group ">
+
+                    <div class="col-sm-5 col-sm-offset-4">
+                        <input  class="btn btn-success form-control" type="submit" value="Allocate" />
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+    
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/jquery.timepicker.min.js"></script>
+    
+    
+    <script>
+    $(document).ready(function() {
+
+
+        $("#room-allocation").validate({
+            rules: {
+                departmentId: "required",
+                CourseId: "required",
+                RoomNo: "required",
+                Day: "required",
+                FromTime: "required",
+                ToTime: "required"
+           
+              
+            },
+            messages: {
+                DepartmentCode: "Deparment Code Must Be 2 to 7 Character"
+            }
+        });
+ 
+
+
+
+
+
+
+        $("#departmentId").change(function () {
+            var selectdepttId = parseInt($("#departmentId").val());
+            $("#CourseId").empty();
+            $("#CourseId").append('<option value=0> ' + "Select Course" + '</option>');
+
+            var json = { departId: selectdepttId };
+
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetAllCourseBydepartmentId", "ScheduleAndRoomAllocatio")',
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                data: JSON.stringify(json),
+                success: function(data) {
+                    $.each(data,
+                        function(key, value) {
+                            //alert(value.Id);
+                            $("#CourseId").append('<option value=' + value.Id + '>' + value.CourseName + '</option>');
+
+                        });
+
+                }
+            });
+
+        });
+
+
+     
+
+        
+
+        //$('#fromTimePciker').prop('', true);
+
+        $('#fromTimePciker').timepicker({
+            'timeFormat': 'h:i A',
+            'forceRoundTime': true,
+            'step': 15
+            //'disableTimeRanges': a
+
+        });
+
+
+        $('#toTimePciker').timepicker({
+            'timeFormat': 'h:i A',
+            'forceRoundTime': true,
+            'step': 15,
+           // 'disableTimeRanges': ;
+    });
+
+
+
+        @*$("#selected-day").change(function () {
+            var selectedDay = $("#selected-day").val();
+            var selectedRoom = parseInt($("#selected-room").val());
+
+            var json = { dayCode: selectedDay, roomId: selectedRoom };
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DisableTimePickertime", "ScheduleAndRoomAllocatio")',
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                data: JSON.stringify(json),
+                success: function (data) {
+                    alert(data);
+                   // a = $.parseJSON(data);
+                   // console.log(a);
+
+                }
+            });
+
+        });*@
+
+
+
+        //-----------------------------
+
+        // $('#fromTimePciker').timepicker();
+        //$('#toTimePciker').timepicker();
+
+
+    });
+</script>
+
+    
+
+</body>
+</html>
